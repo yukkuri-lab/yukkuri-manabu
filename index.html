@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fbf7e9">
+  <title>ゆっくり まなぶ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+  <style>
+    :root{--paper:#FBF7E9;--pencil:#4D4A45;--soft:#686159;--rule:#BFD8EC;--margin:#E7B0A6;--blue:#6F92BC;--pick-bg:#E8EEF5;--pick-border:#6F8195;--panel-border:#D9CFBD}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#e9e5dc;color:var(--pencil)}
+    body{font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif;font-weight:700;-webkit-tap-highlight-color:transparent;word-break:keep-all}
+    main{min-height:100dvh;max-width:760px;margin:auto;padding:max(38px,env(safe-area-inset-top)) 22px max(56px,env(safe-area-inset-bottom)) 52px;position:relative;
+      background-color:var(--paper);background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 34px,var(--rule) 35px,transparent 36px)}
+    main:before{content:"";position:absolute;left:31px;top:0;bottom:0;width:2px;background:var(--margin)}
+    .inner{position:relative}
+    .title{text-align:center;font-size:clamp(32px,8vw,48px);font-weight:900;margin:10px 0 8px;letter-spacing:.06em;transform:rotate(-.6deg)}
+    .sub{text-align:center;color:var(--pencil);font-size:16px;margin:0 auto 34px;line-height:1.8}
+    .choose{text-align:center;font-size:16px;color:var(--pencil);margin-bottom:12px}
+    .apps{display:grid;gap:14px;max-width:520px;margin:0 auto}
+    .app{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;min-height:88px;padding:16px 18px;background:var(--paper);border:2px solid var(--soft);border-radius:13px;box-shadow:0 3px 0 var(--panel-border);touch-action:manipulation;transition:transform .08s,background .15s}
+    .app:hover{background:var(--pick-bg)}
+    .app:active{transform:translateY(2px)}
+    .app:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+    .app-icon{flex:none;width:56px;height:56px;object-fit:contain}
+    .app-text{min-width:0;flex:1}
+    .app-title{display:block;font-size:24px;font-weight:900;line-height:1.35}
+    .app-note{display:block;margin-top:5px;font-size:16px;color:var(--soft);line-height:1.6}
+    .arrow{flex:none;font-size:24px;font-weight:900;color:var(--pick-border)}
+    .coming{max-width:520px;margin:20px auto 0;text-align:center;font-size:16px;color:var(--pencil);line-height:1.8}
+    .foot{text-align:center;margin:28px auto 0;font-size:14px;color:var(--pencil);line-height:1.8}
+    .foot a{color:var(--pencil)}
+    @media(max-width:390px){main{padding-left:40px;padding-right:12px}main:before{left:25px}.app{padding:14px 15px;min-height:82px}.app-title{font-size:16px}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+<main><div class="inner">
+  <h1 class="title">ゆっくり まなぶ</h1>
+  <p class="sub">がっこうの こと、おうちの こと。<br>ゆっくり できるように なる れんしゅうアプリ</p>
+  <p class="choose">あそぶ アプリを えらんでね</p>
+  <nav class="apps" aria-label="アプリをえらぶ">
+    <a class="app" href="./oshiete-yokai/">
+      <img class="app-icon" src="./oshiete-yokai/icon-180.png" alt="">
+      <span class="app-text"><span class="app-title">おしえて ようかい</span>
+      <span class="app-note">がっこうを しらない ようかいに、きょうの ことを おしえよう。かんそうが かけるように なるよ。</span></span>
+      <span class="arrow" aria-hidden="true">›</span></a>
+  </nav>
+  <p class="coming">まなぶ アプリを、これからも すこしずつ ふやしていきます。</p>
+  <p class="foot">あそぶ ゲームは <a href="https://yukkuri-lab.github.io/yukkuri-asobi/">ノートであそぼう！</a> にあります。</p>
+</div></main>
+</body>
+</html>
