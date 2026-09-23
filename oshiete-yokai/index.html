@@ -350,13 +350,14 @@ function title(){
     <div class="row mid"><button class="btn main" id="go" type="button">はじめる</button></div>`);
   on('#go',()=>{ sfx('tap'); if(S.name===undefined) askName(); else if(!S.plays) startPlay(0); else home() });
 }
-const sensei=()=>S.name?`${S.name}せんせい`:'せんせい';
+// なまえの よびかた（すでに くん・ちゃん・さん が ついていたら かさねない）
+const sensei=()=>{ const n=(S.name||'').trim(); if(!n) return 'きみ'; return /(くん|ちゃん|さん|君)$/.test(n) ? n : `${n}くん` };
 function askName(){
   const code=nextYokai(0), t='はじめまして！ ぼく、がっこうに いってみたいんだ。きみの なまえ、おしえて？';
   show(`<div class="stage big"><div class="ykw">${img(code,lookState(code))}</div>
       <div class="bubble"><span id="say">${esc(t)}</span></div></div>
     <div class="typein"><input id="nm" type="text" maxlength="10" enterkeyhint="done" autocomplete="off" aria-label="きみの なまえ" placeholder="なまえ"><button class="btn main" id="ok" type="button">OK</button></div>
-    <p class="hint">おうちの人と いっしょに いれてね。ようかいが「○○せんせい」と よぶよ。</p>
+    <p class="hint">おうちの人と いっしょに いれてね。ようかいが「○○くん」と よぶよ。</p>
     <div class="row mid"><button class="link" id="later" type="button">あとで いれる</button></div>`);
   speak(t);
   const go=()=>{ const v=app.querySelector('#nm').value.trim(); if(!v) return; S.name=v; persist(); sfx('yay');
@@ -407,7 +408,7 @@ function home(){
         <button class="btn" id="v-c" type="button" aria-pressed="${S.voice==='yokai-c'}">のんびり</button>
         <button class="btn" id="v-d" type="button" aria-pressed="${S.voice==='yokai-d'}">こども</button>
         <button class="btn" id="v-x" type="button" aria-pressed="${S.voice==='browser'}">ブラウザの こえ</button></p>
-      <p>なまえ（妖怪が「○○せんせい」と呼びます）：</p>
+      <p>なまえ（妖怪が「○○くん」と呼びます）：</p>
       <div class="typein"><input id="nameIn" type="text" maxlength="10" autocomplete="off" aria-label="なまえ" value="${esc(S.name||'')}"><button class="btn" id="nameOk" type="button">かえる</button></div>
       <p>かく ところ：<button class="btn" id="wScreen" type="button" aria-pressed="${!S.paper}">📱 がめんに ゆびで</button> <button class="btn" id="wPaper" type="button" aria-pressed="${!!S.paper}">📓 かみの ノート</button></p>
       <p>記録はこの端末の中だけに残ります。</p>
