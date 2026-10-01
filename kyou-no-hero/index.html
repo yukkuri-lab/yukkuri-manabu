@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>きょうのヒーロー</title>
+<meta name="theme-color" content="#FBF7E9">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+<style>
+:root{
+  --paper:#FBF7E9; --pencil:#4D4A45; --soft:#686159; --rule:#BFD8EC;
+  --margin:#E7B0A6; --blue:#6F92BC; --pick-bg:#E8EEF5; --pick-border:#6F8195;
+  --panel-border:#D9CFBD;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--pencil);
+  font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif;
+  font-weight:500; font-size:16px; line-height:1.7;
+  padding:20px 16px 40px;
+}
+.wrap{width:min(100%,680px); margin:0 auto}
+
+h1{
+  font-size:clamp(27px,7vw,42px); font-weight:900; margin:0 0 8px;
+  text-align:center; letter-spacing:.02em;
+}
+h1::after{
+  content:""; display:block; width:min(100%,180px); height:3px;
+  background:var(--blue); margin:8px auto 0; border-radius:999px;
+}
+.lead{font-size:14px; color:var(--soft); text-align:center; margin:0 0 20px}
+
+/* ===== テレビ ===== */
+.tv{
+  background:var(--pencil); border-radius:13px; overflow:hidden;
+  box-shadow:0 8px 20px rgba(77,74,69,.22);
+}
+.tv-bar{
+  display:flex; align-items:center; gap:8px;
+  padding:8px 12px; border-bottom:2px solid var(--soft);
+}
+.live{display:flex; align-items:center; gap:8px; font-size:14px; font-weight:900; color:var(--margin)}
+.dot{width:12px; height:12px; border-radius:999px; background:var(--margin); animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.dot{animation:none}}
+.clock{font-size:14px; color:var(--paper); margin-left:auto}
+.logo{font-size:13px; font-weight:900; color:var(--rule)}
+
+.stage{
+  position:relative; padding:20px 12px 12px;
+  min-height:240px; display:flex; flex-direction:column; align-items:center; gap:12px;
+}
+.hero{
+  width:min(46%,148px); aspect-ratio:1; border-radius:999px;
+  border:3px solid var(--rule); background:var(--soft);
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:700; color:var(--paper); text-align:center;
+  overflow:hidden; padding:0; cursor:pointer;
+  transition:transform .08s, border-color .12s;
+}
+.hero:hover{border-color:var(--paper)}
+.hero:active{transform:scale(.96)}
+.hero:focus-visible{outline:3px solid var(--paper); outline-offset:3px}
+.hero img,.hero video{width:100%; height:100%; object-fit:cover; display:block}
+.hero video{transform:scaleX(-1)}
+.shoot{
+  background:var(--rule); border-color:var(--rule); color:var(--pencil);
+}
+
+.question{
+  color:var(--paper); font-size:24px; font-weight:700;
+  text-align:center; margin:0; width:min(100%,520px);
+}
+.answer-sub{
+  background:rgba(251,247,233,.10); border:2px solid var(--rule); border-radius:10px;
+  color:var(--paper); font-size:16px; padding:8px 12px;
+  width:min(100%,520px); text-align:center; min-height:44px;
+}
+.answer-sub.empty{color:var(--rule)}
+
+/* テロップ */
+.telop{display:flex; flex-wrap:wrap; gap:8px; padding:8px 12px 12px}
+.telop span{
+  background:var(--rule); color:var(--pencil); font-size:14px; font-weight:700;
+  padding:8px 12px; border-radius:999px;
+}
+.mic{display:block; margin:0 auto -4px}
+
+/* ===== 操作 ===== */
+.panel{
+  border:2px solid var(--panel-border); border-radius:13px;
+  padding:12px; margin-top:20px; background:var(--paper);
+}
+.panel h2{font-size:24px; font-weight:700; margin:0 0 8px; text-align:center}
+.note{font-size:13px; color:var(--soft); margin:8px 0 0}
+.row{display:flex; flex-wrap:wrap; gap:8px; justify-content:center}
+#freeRow input[type=text]{flex:1 1 min(100%,220px)}
+
+button{
+  font-family:inherit; font-weight:700; font-size:16px;
+  background:var(--paper); color:var(--pencil);
+  border:2px solid var(--soft); border-radius:999px;
+  padding:12px 20px; min-height:48px; min-width:48px; cursor:pointer;
+  transition:transform .08s, background .12s;
+}
+button:hover{background:var(--pick-bg)}
+button:active{transform:translateY(2px); background:var(--pick-bg)}
+button:focus-visible{outline:3px solid var(--pick-border); outline-offset:2px}
+button[aria-pressed="true"]{background:var(--pick-bg); border-color:var(--pick-border)}
+button.main{background:var(--pick-bg); border-color:var(--pick-border); font-size:16px}
+button.quiet{font-size:14px; padding:8px 12px; min-height:44px}
+
+input[type=text]{
+  font-family:inherit; font-size:16px; color:var(--pencil); background:var(--paper);
+  border:2px solid var(--soft); border-radius:10px; padding:12px;
+  width:min(100%,420px); min-height:48px;
+}
+input[type=text]:focus-visible{outline:3px solid var(--pick-border); outline-offset:2px}
+
+.diary{
+  border:2px solid var(--panel-border); border-radius:13px; padding:12px; margin-top:12px;
+}
+.diary p{margin:0 0 8px; font-size:16px}
+.diary-h{font-size:24px; font-weight:700; margin:0 0 8px; text-align:center}
+.diary .date{font-size:13px; color:var(--soft)}
+.hide{display:none !important}
+.privacy{font-size:13px; color:var(--soft); text-align:center; margin:12px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>きょうのヒーロー</h1>
+  <p class="lead">きょうの できごとを、しゃべるだけ。にっきが できるよ。</p>
+
+  <!-- テレビ -->
+  <div class="tv">
+    <div class="tv-bar">
+      <span class="live"><span class="dot"></span>LIVE</span>
+      <span class="logo">きょうのヒーロー</span>
+      <span class="clock" id="clock">--:--</span>
+    </div>
+    <div class="stage">
+      <button class="hero" id="hero" type="button">ここを おして<br>しゃしんを とってね</button>
+      <p class="question" id="question">ばんぐみが はじまります</p>
+      <div class="answer-sub empty" id="sub">…</div>
+    </div>
+    <svg class="mic" width="56" height="30" viewBox="0 0 56 30" aria-hidden="true">
+      <rect x="22" y="0" width="12" height="18" rx="6" fill="#BFD8EC"/>
+      <rect x="26" y="16" width="4" height="14" fill="#BFD8EC"/>
+      <path d="M18 10a10 10 0 0 0 20 0" fill="none" stroke="#BFD8EC" stroke-width="3"/>
+    </svg>
+    <div class="telop" id="telop"></div>
+  </div>
+
+  <!-- 操作パネル -->
+  <div class="panel" id="panel">
+    <h2 id="panelTitle">したく</h2>
+    <div class="row" id="choices"></div>
+    <div class="row" id="freeRow" style="margin-top:8px"></div>
+    <p class="note" id="note"></p>
+  </div>
+
+  <div id="diaryBox"></div>
+  <p class="privacy">しゃしんも なまえも、この たんまつの なかだけ。どこにも おくりません。</p>
+</div>
+
+<script>
+const KEY='kyou-no-hero-v1';
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}};
+const save=d=>{try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}};
+let store=load();
+if(!store.diary) store.diary=[];
+
+const $=id=>document.getElementById(id);
+const st={subject:'',score:null,reason:'',feeling:''};
+
+/* 時計 */
+const tick=()=>{const d=new Date();$('clock').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+tick(); setInterval(tick,20000);
+
+/* 写真 */
+let camStream=null;
+function drawHero(){
+  const h=$('hero');
+  if(store.photo){h.innerHTML=''; const im=new Image(); im.src=store.photo; im.alt='きょうのヒーロー'; h.appendChild(im);}
+  else if(store.yokai){h.innerHTML=''; const im=new Image(); im.src=store.yokai; im.alt='えらんだ ようかい'; h.appendChild(im);}
+  else h.innerHTML='ここを おして<br>しゃしんを とってね';
+}
+
+function stopCam(){
+  if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+  $('hero').classList.remove('shoot');
+}
+
+/* 枠を押す → カメラが開く → もう一度押すと とれる */
+async function openCam(){
+  const h=$('hero');
+  if(camStream){ shoot(); return; }                 // 2回目の タップで さつえい
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ pickFile(); return; }
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640}},audio:false});
+    const v=document.createElement('video');
+    v.srcObject=camStream; v.autoplay=true; v.muted=true; v.playsInline=true; v.setAttribute('playsinline','');
+    h.innerHTML=''; h.appendChild(v); h.classList.add('shoot');
+    sub('もういちど わくを おすと、とれるよ');
+    camButtons();
+  }catch(e){ pickFile(); }                           // きょかが でない／カメラが ない ときは アルバム
+}
+
+function shoot(){
+  const v=$('hero').querySelector('video');
+  if(!v){ stopCam(); return; }
+  const n=320, c=document.createElement('canvas'); c.width=n; c.height=n;
+  const g=c.getContext('2d');
+  const side=Math.min(v.videoWidth,v.videoHeight);
+  const sx=(v.videoWidth-side)/2, sy=(v.videoHeight-side)/2;
+  g.translate(n,0); g.scale(-1,1);                   // かがみ に する
+  g.drawImage(v,sx,sy,side,side,0,0,n,n);
+  store.photo=c.toDataURL('image/jpeg',0.82); store.yokai=null;
+  try{ save(store) }catch(e){}
+  stopCam(); drawHero(); sub('とれた！'); scSetup();
+}
+
+function pickFile(){ const f=$('file'); if(f) f.click(); }
+
+/* 読み上げ（試作はブラウザの声。公開時は おはなしの森の声に差し替え） */
+function speak(t){
+  try{ if(!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=1.0; u.pitch=1.1;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* 聞き取り */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+function listen(onResult){
+  if(!SR){ onResult(null); return; }
+  try{
+    const r=new SR(); r.lang='ja-JP'; r.interimResults=false; r.maxAlternatives=1;
+    $('sub').textContent='きいています…'; $('sub').classList.remove('empty');
+    r.onresult=e=>onResult(e.results[0][0].transcript);
+    r.onerror=()=>onResult(null);
+    r.start();
+  }catch(e){ onResult(null); }
+}
+
+/* 呼び名（なまえが まだ なら「きょうの ヒーロー」） */
+function who(){
+  return store.name ? store.name+' せんしゅ' : 'きょうの ヒーロー';
+}
+function whoLong(){
+  return (store.klass ? store.klass+'の ' : '') + who();
+}
+
+/* テロップ */
+function telop(){
+  const t=$('telop'); t.innerHTML='';
+  const items=[(store.klass?store.klass+'　':'')+who()];
+  if(st.subject) items.push(st.subject);
+  if(st.score!==null) items.push(st.score);
+  if(st.feeling) items.push(st.feeling);
+  items.forEach(x=>{const s=document.createElement('span'); s.textContent=x; t.appendChild(s)});
+}
+
+function ui(title,btns,noteText,extra){
+  $('panelTitle').textContent=title;
+  const c=$('choices'); c.innerHTML='';
+  btns.forEach(b=>{
+    const el=document.createElement('button');
+    el.textContent=b.label; if(b.main) el.className='main'; if(b.quiet) el.className='quiet';
+    el.onclick=b.act; c.appendChild(el);
+  });
+  $('note').textContent=noteText||'';
+  const f=$('freeRow'); f.innerHTML=''; if(extra) extra(f);
+}
+
+function ask(text){ $('question').textContent=text; speak(text); }
+function sub(text,dim){ const s=$('sub'); s.textContent=text; s.classList.toggle('empty',!!dim); }
+
+/* ===== 画面 ===== */
+function camButtons(){
+  ui('カメラ',[
+    {label:'📸 とる',main:true,act:shoot},
+    {label:'やめる',act:()=>{stopCam(); drawHero(); scSetup()}}
+  ],'わくを おしても とれるよ。');
+}
+
+function scSetup(){
+  drawHero(); telop(); sub('…',true);
+  $('question').textContent='ばんぐみが はじまります';
+  ui('したく',[
+    {label:'📷 しゃしんを とる',main:true,act:openCam},
+    {label:'👻 ようかいに する',act:()=>{stopCam(); store.yokai='img/C002.webp'; store.photo=null; save(store); drawHero(); scSetup()}},
+    {label:'✏️ なまえを いれる',act:nameInput},
+    {label:'▶ ばんぐみ スタート',main:true,act:scOpening}
+  ],'しゃしんも なまえも 1かい いれれば、つぎからも でてくるよ。',f=>{
+    const i=document.createElement('input'); i.type='file'; i.accept='image/*'; i.id='file'; i.className='hide';
+    i.onchange=e=>{const fl=e.target.files[0]; if(!fl) return;
+      const fr=new FileReader(); fr.onload=()=>{store.photo=fr.result; store.yokai=null; save(store); drawHero()}; fr.readAsDataURL(fl);};
+    f.appendChild(i);
+    const alb=document.createElement('button'); alb.className='quiet'; alb.textContent='🖼 アルバムから えらぶ';
+    alb.onclick=pickFile; f.appendChild(alb);
+    if(store.photo||store.yokai){
+      const del=document.createElement('button'); del.className='quiet'; del.textContent='しゃしんを けす';
+      del.onclick=()=>{store.photo=null; store.yokai=null; save(store); drawHero(); scSetup()};
+      f.appendChild(del);
+    }
+  });
+}
+
+function scOpening(){
+  st.subject=''; st.score=null; st.reason=''; st.feeling=''; telop();
+  ask('こんばんは！ がっこうから ちゅうけいです。きょうは '+whoLong()+'に おはなしを ききます！');
+  sub('…',true);
+  ui('じゅんび',[{label:'▶ しつもんに すすむ',main:true,act:scSubject}],'');
+}
+
+const SUBJECTS=['こくご','さんすう','たいいく','おんがく','ずこう','きゅうしょく','そうじ','やすみじかん'];
+function scSubject(){
+  ask(who()+'！ きょうは どの じかんの おはなしを きかせて くれますか！');
+  sub('…',true);
+  ui('じかんを えらぶ', SUBJECTS.map(s=>({label:s,act:()=>{st.subject=s; telop(); scScore()}})),
+    'ゆびで えらぶだけ。ぜんぶ こたえなくて いいよ。');
+}
+
+const SCORES=['0てん','10てん','30てん','50てん','80てん','100てん','1000てん','100まんてん'];
+function scScore(){
+  ask('きょうの '+st.subject+' は、なんてん でしたか！');
+  sub('…',true);
+  ui('なんてん？', SCORES.map(s=>({label:s,act:()=>{st.score=s; telop(); scReason()}})),
+    'てんすうは じゆう。100まんてんでも いいよ。');
+}
+
+function reaction(){
+  const n=parseInt(String(st.score).replace(/[^0-9]/g,''),10);
+  if(String(st.score).includes('まん')||n>=1000) return 'これは だいきろくです！ なにが あったのですか！';
+  if(n>=80) return 'いい 1にち だったようですね！ なにが よかったのですか！';
+  if(n>=50) return 'なるほど '+st.score+' ですか。それは なぜでしょう！';
+  return 'きょうは おもうように いきませんでしたね。なにが あったのですか！';
+}
+
+function scReason(){
+  ask(reaction());
+  sub('マイクを おして こたえてね',true);
+  ui('こたえる',[
+    {label:'🎤 こえで こたえる',main:true,act:()=>listen(t=>{
+      if(t){ st.reason=t; sub(t); ui('こたえる',[
+        {label:'つぎへ',main:true,act:scFeeling},{label:'いいなおす',quiet:true,act:scReason}],'');
+      } else { sub('きこえなかった。もじで かいてね',true); textFallback(v=>{st.reason=v; sub(v); scFeeling()}); }
+    })},
+    {label:'⌨ もじで かく',act:()=>textFallback(v=>{st.reason=v; sub(v); scFeeling()})}
+  ],'ひとこと で いいよ。');
+}
+
+const FEELINGS=['うれしい','たのしい','くやしい','ドキドキした','ホッとした','きんちょうした','つかれた','びっくりした'];
+function scFeeling(){
+  ask('そのとき、どんな きもち でしたか！');
+  sub(st.reason||'…',!st.reason);
+  ui('きもち を えらぶ', FEELINGS.map(f=>({label:f,act:()=>{st.feeling=f; telop(); scEnding()}})),
+    'ぴったり なければ 「⌨ じぶんの ことば」で かいてね。',f=>{
+      const b=document.createElement('button'); b.className='quiet'; b.textContent='⌨ じぶんの ことば';
+      b.onclick=()=>textFallback(v=>{st.feeling=v; telop(); scEnding()}); f.appendChild(b);
+    });
+}
+
+function nameInput(){
+  const f=$('freeRow'); f.innerHTML='';
+  const n=document.createElement('input'); n.type='text'; n.placeholder='なまえ（れい：たろう）'; n.value=store.name||'';
+  const k=document.createElement('input'); k.type='text'; k.placeholder='くみ（れい：1ねん1くみ）'; k.value=store.klass||'';
+  const b=document.createElement('button'); b.className='main'; b.textContent='OK';
+  const done=()=>{ store.name=n.value.trim(); store.klass=k.value.trim(); save(store); telop(); scSetup(); };
+  b.onclick=done;
+  [n,k].forEach(i=>{ i.onkeydown=e=>{ if(e.key==='Enter') done() } });
+  f.appendChild(n); f.appendChild(k); f.appendChild(b); n.focus();
+}
+
+function textFallback(cb){
+  const f=$('freeRow'); f.innerHTML='';
+  const i=document.createElement('input'); i.type='text'; i.placeholder='ここに かいてね';
+  const b=document.createElement('button'); b.className='main'; b.textContent='OK';
+  b.onclick=()=>{ if(i.value.trim()) cb(i.value.trim()) };
+  i.onkeydown=e=>{ if(e.key==='Enter'&&i.value.trim()) cb(i.value.trim()) };
+  f.appendChild(i); f.appendChild(b); i.focus();
+}
+
+function sentence(){
+  const d=new Date();
+  return d.getMonth()+1+'がつ'+d.getDate()+'にち。きょうの '+st.subject+' は '+st.score+' でした。'
+    +st.reason.replace(/[。．]$/,'')+'からです。'+st.feeling+' きもちでした。';
+}
+
+function scEnding(){
+  const s=sentence();
+  ask('いい おはなしが きけました！ きょうの '+who()+'の ことば、こちらです！');
+  sub(s);
+  ui('できあがり',[
+    {label:'💾 にっきに のこす',main:true,act:()=>{
+      store.diary.unshift({at:new Date().toISOString(),subject:st.subject,score:st.score,reason:st.reason,feeling:st.feeling,text:s});
+      save(store); showDiary(); scOpening();
+    }},
+    {label:'もういっかい',act:scOpening},
+    {label:'📖 にっきを みる',quiet:true,act:showDiary}
+  ],'この ぶんを ノートに うつせば、かんそうぶん の できあがり。');
+}
+
+function showDiary(){
+  const box=$('diaryBox'); box.innerHTML='';
+  if(!store.diary.length) return;
+  const d=document.createElement('div'); d.className='diary';
+  const h=document.createElement('h2'); h.className='diary-h'; h.textContent='にっき（'+store.diary.length+'こ）';
+  d.appendChild(h);
+  store.diary.slice(0,8).forEach(e=>{
+    const p=document.createElement('p'); p.textContent=e.text; d.appendChild(p);
+    const s=document.createElement('p'); s.className='date';
+    s.textContent=e.subject+'／'+e.score+'／'+e.feeling; d.appendChild(s);
+  });
+  box.appendChild(d);
+}
+
+if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+$('hero').onclick=openCam;
+window.addEventListener('pagehide',stopCam);
+scSetup(); showDiary();
+</script>
+</body>
+</html>
