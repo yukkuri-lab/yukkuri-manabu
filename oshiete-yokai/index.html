@@ -291,9 +291,11 @@ function browserSpeak(text,yokai){
   u.lang='ja-JP'; u.rate=yokai?.95:.85; u.pitch=yokai?1.3:1; if(voice) u.voice=voice;
   speechSynthesis.speak(u);
 }
+// 読み上げには名前を入れない（声のサーバーやブラウザの声に本名を送らないため。画面の文字はそのまま）
+function hideName(s){ const n=sensei(); return n==='きみ' ? s : s.split(n).join('きみ') }
 function speak(text,yokai=true){
   playbackMode(); hush();
-  const t=String(text).replace(/[ 　]/g,'').slice(0,480);
+  const t=hideName(String(text)).replace(/[ 　]/g,'').slice(0,480);
   if(!t) return;
   const key=S.voice||'yokai-a';
   if(!ttsOK || key==='browser') return browserSpeak(t,yokai);
